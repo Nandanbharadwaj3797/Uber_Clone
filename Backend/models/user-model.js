@@ -21,4 +21,8 @@ userSchema.methods.generateAuthToken = function () {
   return jwt.sign({ _id: this._id, email: this.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 };
 
+userSchema.methods.comparePassword = async function (plainPassword) {
+  return await bcrypt.compare(plainPassword, this.password);
+};
+
 module.exports = mongoose.model('User', userSchema);

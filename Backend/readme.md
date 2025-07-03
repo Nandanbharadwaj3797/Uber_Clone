@@ -4,7 +4,7 @@
 
 ### Endpoint
 
-`POST /user/register`
+`POST /users/register`
 
 ### Description
 
@@ -15,7 +15,6 @@ Registers a new user with the provided details. It validates the input, hashes t
 The request body must be a JSON object with the following structure:
 
 ```json
-
 {
   "fullname": {
     "firstname": "John",
@@ -81,3 +80,70 @@ The request body must be a JSON object with the following structure:
   "error": "An internal server error occurred."
 }
 ```
+
+## User Login
+
+### Endpoint
+
+`POST /users/login`
+
+### Description
+
+Authenticates an existing user with their email and password. On successful authentication, it returns a JWT for future requests.
+
+### Request Body
+
+The request body must be a JSON object with the following structure:
+
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+```
+
+### Validation Rules
+
+- `email`: Must be a valid email format.
+- `password`: Must be a string with a minimum length of 6 characters.
+
+### Responses
+
+#### Success Response
+
+- **Status Code:** `200 OK`
+- **Content:** A JSON object containing the authentication token and the user's details.
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "_id": "60d5f2c5c7b8f8b8f8b8f8b8",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com"
+  }
+}
+```
+
+#### Error Responses
+
+- **Status Code:** `400 Bad Request`
+- **Description:** This response is sent if the request body fails validation (e.g., invalid email format, password too short).
+- **Content:** A JSON object with an `errors` array detailing the validation failures.
+
+- **Status Code:** `401 Unauthorized`
+- **Description:** This response is sent if the provided email or password is incorrect.
+- **Content:** A JSON object with an error message.
+
+```json
+{
+  "message": "Invalid email or password"
+}
+```
+
+- **Status Code:** `500 Internal Server Error`
+- **Description:** This response is sent if there is an unexpected error on the server.
+- **Content:** A JSON object with an `error` message.
