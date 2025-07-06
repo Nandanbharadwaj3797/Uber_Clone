@@ -147,3 +147,84 @@ The request body must be a JSON object with the following structure:
 - **Status Code:** `500 Internal Server Error`
 - **Description:** This response is sent if there is an unexpected error on the server.
 - **Content:** A JSON object with an `error` message.
+
+## Get User Profile
+
+### Endpoint
+
+`GET /users/profile`
+
+### Description
+
+Retrieves the profile information of the currently authenticated user. This is a protected route and requires a valid JWT to be provided in the `Authorization` header as a Bearer token or in a cookie.
+
+### Headers
+
+- `Authorization`: `Bearer <jwt_token>` (if not using cookies)
+
+### Responses
+
+#### Success Response
+
+- **Status Code:** `200 OK`
+- **Content:** A JSON object containing the user's details (excluding the password).
+
+```json
+{
+  "_id": "60d5f2c5c7b8f8b8f8b8f8b8",
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "john.doe@example.com"
+}
+```
+
+#### Error Responses
+
+- **Status Code:** `401 Unauthorized`
+- **Description:** This response is sent if the token is missing, invalid, or the user is not found.
+- **Content:** A JSON object with an error message.
+
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+## User Logout
+
+### Endpoint
+
+`GET /users/logout`
+
+### Description
+
+Logs the user out by invalidating their current session. It blacklists the JWT, making it unusable for future requests, and clears the session cookie.
+
+### Headers
+
+- `Authorization`: `Bearer <jwt_token>` (if not using cookies)
+
+### Responses
+
+#### Success Response
+
+- **Status Code:** `200 OK`
+- **Content:** A JSON object with a success message.
+
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+#### Error Responses
+
+- **Status Code:** `401 Unauthorized`
+- **Description:** This response is sent if the token is missing or invalid.
+- **Content:** A JSON object with an error message.
+
+- **Status Code:** `500 Internal Server Error`
+- **Description:** This response is sent if there is an unexpected error on the server during the logout process.
+- **Content:** A JSON object with an `error` message.
